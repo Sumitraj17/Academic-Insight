@@ -19,6 +19,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [teacher, setTeacher] = useState<Teacher | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    useEffect(() => {
+
+    }, []);
+
     const login = async (email: string, password: string) => {
 
     }
@@ -39,6 +43,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         logout
     }
 
+    // return (
+    //     <AuthContext
+    // )
 }
 
 export const useAuth = () => useContext(AuthContext);

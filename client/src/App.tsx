@@ -4,7 +4,6 @@ import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import NotFound from "./pages/NotFound"
-// import { useAuth } from "./context/auth-context"
 
 const App = () => {
     // const auth = useAuth();
@@ -22,4 +21,4 @@ const App = () => {
     )
 }
 
-export default App
+export default App;
