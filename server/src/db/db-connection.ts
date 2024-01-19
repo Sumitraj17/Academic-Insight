@@ -1,6 +1,6 @@
 import mysql from 'mysql2';
 
-const connection = mysql.createConnection({
+export const connection = mysql.createConnection({
     host: process.env.DB_HOST,
     user: 'root',
     password: process.env.DB_PASSWORD,
@@ -10,21 +10,9 @@ const connection = mysql.createConnection({
 export const connectToDatabase = () => {
     connection.connect((err) => {
         if (err) {
-            console.log("[MYSQL_CONNECTION_ERROR]", err);
-            return;
+            console.log(err);
+        } else {
+            console.log("Connected to database...");
         }
-
-        console.log("Connected to database successfully...");
     });
-}
-
-export const disconnectFromDatabase = () => {
-    connection.end((err) => {
-        if (err) {
-            console.log("[MYSQL_DISCONNECT_ERROR]", err);
-            return;
-        }
-
-        console.log("Disconnected from database successfully...");
-    })
 }
