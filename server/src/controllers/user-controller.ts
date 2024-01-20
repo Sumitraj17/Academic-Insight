@@ -5,7 +5,7 @@ import { COOKIE_NAME } from "../utils/constants.js";
 import { createToken } from "../utils/token-manager.js";
 import { Teacher } from "../interfaces/teacher.js";
 
-export const getAllTeachers = async (
+export const getAllUsers = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -19,7 +19,7 @@ export const getAllTeachers = async (
     }
 }
 
-export const teacherSignup = async (
+export const userSignup = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -69,7 +69,7 @@ export const teacherSignup = async (
     }
 }
 
-export const teacherLogin = async (
+export const userLogin = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -106,6 +106,7 @@ export const teacherLogin = async (
             httpOnly: true,
             signed: true
         });
+
         return res.status(201).json({ message: "OK", name: existingTeacher[0].Teacher_Name, email: existingTeacher[0].Email });
     } catch (error) {
         console.log(error);
@@ -113,18 +114,52 @@ export const teacherLogin = async (
     }
 }
 
-export const verifyTeacher = async (
+export const verifyUser = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
+    try {
+        const [user] = await connection.promise().query<Teacher[]>('SELECT * FROM teacher WHERE Teacher_id = ?', [res.locals.jwtData.id]);
 
+        if (!user[0])
+            return res.status(401).send("User not registered or Token malfunction...");
+
+
+        if (user[0].Teacher_id !== res.locals.jwtData.id)
+            return res.status(401).send("Permissions did not match...");
+
+        return res.status(200).json({ message: "OK", name: user[0].Teacher_Name, email: user[0].Email });
+    } catch (error) {
+        console.log(error);
+        return res.status(200).json({ message: "ERROR", cause: error.message });
+    }
 }
 
-export const teacherLogout = async (
+export const userLogout = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
+    try {
+        const [user] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher WHERE Teacher_id = ?", [res.locals.jwtData.id]);
 
+        if (!user[0])
+            return res.status(401).send("User not registered or Token malfunction...");
+
+        if (user[0].Teacher_id !== res.locals.jwtData.id)
+            return res.status(401).send("Permissions did not match...");
+
+        res.clearCookie(COOKIE_NAME, {
+            httpOnly: true,
+            domain: process.env.DOMAIN,
+            signed: true,
+            path: "/"
+        });
+
+        return res.status(200).json({ message: "OK", name: user[0].Teacher_Name, email: user[0].Email });
+    } catch (error) {
+        console.log(error);
+        return res.status(200).json({ message: "ERROR", cause: error.message })
+    }
 }
