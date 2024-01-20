@@ -3,7 +3,7 @@ USE academic_insight;
 create table TEACHER(
     Teacher_id char(10) primary key,
     Teacher_Name varchar(50),
-    Password varchar(10),
+    Password varchar(72),
     Email varchar(50) unique,
     Phone_Number char(10) unique
 );
