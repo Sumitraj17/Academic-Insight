@@ -3,10 +3,11 @@ import Header from "./components/Header"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
-import NotFound from "./pages/NotFound"
+import { useAuth } from "./context/auth-context"
+import Marks from "./pages/Marks"
 
 const App = () => {
-    // const auth = useAuth();
+    const auth = useAuth();
 
     return (
         <main>
@@ -15,7 +16,9 @@ const App = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
-                <Route path="*" element={<NotFound />} />
+                {auth?.isLoggedIn && auth?.user && (
+                    <Route path="/marks" element={<Marks />} />
+                )}
             </Routes>
         </main>
     )

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 interface NavLinkProps {
     to: string;
     bg: string;
-    text: string;
+    text: string | JSX.Element;
     textColor: string;
     onClick?: () => Promise<void>;
 }
