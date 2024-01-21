@@ -1,6 +1,35 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
+import { IoLogIn } from "react-icons/io5";
+import CustomInput from "../components/shared/CustomInput";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/auth-context";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const Login = () => {
+    const auth = useAuth();
+    const navigate = useNavigate();
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        try {
+            toast.loading("Logging In", { id: "login" });
+            await auth?.login(email, password);
+            toast.success("Logged In Successfully!", { id: "login" });
+        } catch (error) {
+            toast.error("Login In Failed", { id: "login" });
+        }
+    }
+
+    useEffect(() => {
+        if (auth?.user)
+            return navigate("/marks");
+    }, [auth]);
+
     return (
         <Box width="100%" height="100%" display="flex" flex="1">
             <Box
@@ -12,7 +41,7 @@ const Login = () => {
                     xs: "none"
                 }}
             >
-
+                <img src="" alt="" />
             </Box>
             <Box
                 display={'flex'}
@@ -24,10 +53,10 @@ const Login = () => {
                 alignItems={'center'}
                 padding={1}
                 ml={'auto'}
-                mr={"12"}
+                mr={12}
             >
                 <form
-                    onSubmit={() => { }}
+                    onSubmit={handleSubmit}
                     style={{
                         margin: "auto",
                         padding: "30px",
@@ -46,10 +75,30 @@ const Login = () => {
                         <Typography
                             variant="h4"
                             textAlign="center"
-                            padding="2"
-                            fontWeight="600"
+                            padding={2}
+                            fontWeight={600}
                         >
                             Login
+                            <CustomInput name="email" label="Email" type="email" />
+                            <CustomInput name="password" label="Password" type="password" />
+                            <Button
+                                type="submit"
+                                sx={{
+                                    px: 2,
+                                    py: 1,
+                                    mt: 2,
+                                    width: "400px",
+                                    borderRadius: 2,
+                                    bgcolor: "white",
+                                    "hover": {
+                                        bgcolor: "black",
+                                        color: "white"
+                                    }
+                                }}
+                                endIcon={<IoLogIn />}
+                            >
+                                Login
+                            </Button>
                         </Typography>
                     </Box>
                 </form>

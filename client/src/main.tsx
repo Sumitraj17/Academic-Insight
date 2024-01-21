@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider, createTheme } from '@mui/material';
 import axios from 'axios';
+import { AuthProvider } from './context/auth-context.tsx';
 import './index.css'
 
 //default axios settings
@@ -21,11 +22,13 @@ const theme = createTheme({
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <BrowserRouter>
-            <ThemeProvider theme={theme}>
-                <Toaster position='top-right' />
-                <App />
-            </ThemeProvider>
-        </BrowserRouter>
+        <AuthProvider>
+            <BrowserRouter>
+                <ThemeProvider theme={theme}>
+                    <Toaster position='top-right' />
+                    <App />
+                </ThemeProvider>
+            </BrowserRouter>
+        </AuthProvider>
     </React.StrictMode>,
 )
