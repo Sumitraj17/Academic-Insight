@@ -12,7 +12,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: white;
-    color: white;
+    color: black;
     font-family: 'Roboto Slab', serif;
 }
 
@@ -24,4 +24,9 @@ body {
     border-radius: 10px;
     text-decoration: none;
     letter-spacing: 1px;
+}
+
+.MuiOutlinedInput-input-root.Mui-focused,
+.MuiOutlinedInput-notchedOutline {
+    border-color: black !important;
 }
