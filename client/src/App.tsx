@@ -16,7 +16,9 @@ const App = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
-                <Route path="*" element={<NotFound />} />
+                {auth?.isLoggedIn && auth?.user && (
+                    <Route path="/marks" element={<Marks />} />
+                )}
             </Routes>
         </main>
     )
