@@ -34,6 +34,7 @@ export const userSignup = async (
         // Hash the password before storing in DB
         const hashedPassword = await hash(password, 3);
         await connection.promise().query("INSERT INTO teacher (Teacher_id, Teacher_Name, Email, Password, Phone_number) VALUES (?, ?, ?, ?, ?)", [id, name, email, hashedPassword, phoneNumber]);
+
         const newTeacher = {
             Teacher_id: id,
             Teacher_Name: name,
@@ -41,6 +42,7 @@ export const userSignup = async (
             Password: hashedPassword,
             Phone_Number: phoneNumber
         }
+
         // Remove any existing cookies
         res.clearCookie(COOKIE_NAME, {
             httpOnly: true,
