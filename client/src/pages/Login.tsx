@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Select, MenuItem, InputLabel } from "@mui/material";
 import { IoLogIn } from "react-icons/io5";
 import CustomInput from "../components/shared/CustomInput";
 import { useNavigate } from "react-router-dom";
@@ -79,6 +79,16 @@ const Login = () => {
                             fontWeight={600}
                         >
                             Login
+                            <InputLabel id='user-type'>Age</InputLabel>
+                            <Select
+                                labelId="user-type"
+                                label="Type"
+                                value=''
+                            >
+                                <MenuItem>Teacher</MenuItem>
+                                <MenuItem>Student</MenuItem>
+                                <MenuItem>Admin</MenuItem>
+                            </Select>
                             <CustomInput name="email" label="Email" type="email" />
                             <CustomInput name="password" label="Password" type="password" />
                             <Button
