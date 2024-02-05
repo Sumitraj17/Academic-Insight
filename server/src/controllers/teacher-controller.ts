@@ -32,7 +32,7 @@ export const teacherLogin = async (
         if (!existingTeacher || existingTeacher.length === 0)
             return res.status(200).json({ message: "ERROR", cause: "Teacher does not exist" });
 
-        const isPasswordCorrect = await compare(password, existingTeacher[0].Password);
+        const isPasswordCorrect = await compare(password, existingTeacher[0].password);
         if (!isPasswordCorrect)
             return res.status(403).send("Incorrect password...");
 
