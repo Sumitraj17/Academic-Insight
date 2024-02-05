@@ -20,7 +20,3 @@ export const loginValidator = [
     body("password").trim().isLength({ min: 6 }).withMessage("Password should contain atleast 6 characters")
 ]
 
-export const signupValidator = [
-    body("id").trim().notEmpty().withMessage("Id is required"),
-    ...loginValidator
-]

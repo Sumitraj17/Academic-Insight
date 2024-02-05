@@ -34,12 +34,6 @@ const Header = () => {
                                 text="Login"
                                 textColor="black"
                             />
-                            <NavLink
-                                bg="#ffff"
-                                to="/signup"
-                                text="Signup"
-                                textColor="black"
-                            />
                         </>
                     )}
                 </div>
