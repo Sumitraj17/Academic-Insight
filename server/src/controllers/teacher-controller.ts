@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { connection } from "../db/db-connection.js";
-import { compare, hash } from "bcrypt";
+import { compare } from "bcrypt";
 import { COOKIE_NAME } from "../utils/constants.js";
 import { createToken } from "../utils/token-manager.js";
 import { Teacher } from "../interfaces/teacher.js";
 
-export const getAllUsers = async (
+export const getAllTeachers = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -19,7 +19,7 @@ export const getAllUsers = async (
     }
 }
 
-export const userLogin = async (
+export const teacherLogin = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -57,47 +57,47 @@ export const userLogin = async (
             signed: true
         });
 
-        return res.status(201).json({ message: "OK", name: existingTeacher[0].Teacher_Name, email: existingTeacher[0].Email });
+        return res.status(201).json({ message: "OK", teacherName: existingTeacher[0].Teacher_Name, teacherEmail: existingTeacher[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
     }
 }
 
-export const verifyUser = async (
+export const verifyTeacher = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     try {
-        const [user] = await connection.promise().query<Teacher[]>('SELECT * FROM teacher WHERE Teacher_id = ?', [res.locals.jwtData.id]);
+        const [teacher] = await connection.promise().query<Teacher[]>('SELECT * FROM teacher WHERE Teacher_id = ?', [res.locals.jwtData.id]);
 
-        if (!user[0])
-            return res.status(401).send("User not registered or Token malfunction...");
+        if (!teacher[0])
+            return res.status(401).send("Teacher not registered or Token malfunction...");
 
 
-        if (user[0].Teacher_id !== res.locals.jwtData.id)
+        if (teacher[0].Teacher_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
 
-        return res.status(200).json({ message: "OK", name: user[0].Teacher_Name, email: user[0].Email });
+        return res.status(200).json({ message: "OK", teacherName: teacher[0].Teacher_Name, teacherEmail: teacher[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
     }
 }
 
-export const userLogout = async (
+export const teacherLogout = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     try {
-        const [user] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher WHERE Teacher_id = ?", [res.locals.jwtData.id]);
+        const [teacher] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher WHERE Teacher_id = ?", [res.locals.jwtData.id]);
 
-        if (!user[0])
-            return res.status(401).send("User not registered or Token malfunction...");
+        if (!teacher[0])
+            return res.status(401).send("Teacherteacher not registered or Token malfunction...");
 
-        if (user[0].Teacher_id !== res.locals.jwtData.id)
+        if (teacher[0].Teacher_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
 
         res.clearCookie(COOKIE_NAME, {
@@ -107,7 +107,7 @@ export const userLogout = async (
             path: "/"
         });
 
-        return res.status(200).json({ message: "OK", name: user[0].Teacher_Name, email: user[0].Email });
+        return res.status(200).json({ message: "OK", teacherName: teacher[0].Teacher_Name, teacherEmail: teacher[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message })
