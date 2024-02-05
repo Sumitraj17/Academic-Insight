@@ -19,57 +19,7 @@ export const getAllUsers = async (
     }
 }
 
-export const userSignup = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    try {
-        const { id, name, email, password, phoneNumber } = req.body;
-        const [existingTeacher] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher WHERE Teacher_id = ?", [id]);
 
-        if (existingTeacher.length > 0)
-            return res.status(401).json({ message: "ERROR", cause: "Teacher already exists" });
-
-        // Hash the password before storing in DB
-        const hashedPassword = await hash(password, 3);
-        await connection.promise().query("INSERT INTO teacher (Teacher_id, Teacher_Name, Email, Password, Phone_number) VALUES (?, ?, ?, ?, ?)", [id, name, email, hashedPassword, phoneNumber]);
-
-        const newTeacher = {
-            Teacher_id: id,
-            Teacher_Name: name,
-            Email: email,
-            Password: hashedPassword,
-            Phone_Number: phoneNumber
-        }
-
-        // Remove any existing cookies
-        res.clearCookie(COOKIE_NAME, {
-            httpOnly: true,
-            domain: process.env.DOMAIN,
-            signed: true,
-            path: "/"
-        });
-
-        // Create a token for the teacher and store cookie
-        const token = createToken(newTeacher.Teacher_id, newTeacher.Email, "7d");
-        const expires = new Date();
-        expires.setDate(expires.getDate() + 7);
-
-        res.cookie(COOKIE_NAME, token, {
-            path: "/",
-            domain: process.env.DOMAIN,
-            expires,
-            httpOnly: true,
-            signed: true
-        });
-
-        return res.status(201).json({ message: "OK", name: newTeacher.Teacher_Name, email: newTeacher.Email });
-    } catch (error) {
-        console.log(error);
-        return res.status(200).json({ message: "ERROR", cause: error.message });
-    }
-}
 
 export const userLogin = async (
     req: Request,
@@ -83,8 +33,8 @@ export const userLogin = async (
         // Check if user is present in DB
         if (!existingTeacher || existingTeacher.length === 0)
             return res.status(200).json({ message: "ERROR", cause: "Teacher does not exist" });
-
-        const isPasswordCorrect = await compare(password, existingTeacher[0].Password);
+    
+        const isPasswordCorrect = await compare(password, existingTeacher[0].password);
         if (!isPasswordCorrect)
             return res.status(403).send("Incorrect password...");
 
