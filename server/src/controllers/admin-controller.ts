@@ -57,7 +57,7 @@ export const adminLogin = async (
             signed: true
         });
 
-        return res.status(201).json({ message: "OK", adminName: existingAdmin[0].Admin_Name, adminEmail: existingAdmin[0].Email });
+        return res.status(201).json({ message: "OK", name: existingAdmin[0].Admin_Name, email: existingAdmin[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
@@ -79,7 +79,7 @@ export const verifyAdmin = async (
         if (admin[0].Admin_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
 
-        return res.status(200).json({ message: "OK", adminName: admin[0].Admin_Name, adminEmail: admin[0].Email });
+        return res.status(200).json({ message: "OK", name: admin[0].Admin_Name, email: admin[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
@@ -107,7 +107,7 @@ export const adminLogout = async (
             path: "/"
         });
 
-        return res.status(200).json({ message: "OK", adminName: admin[0].admin_Name, adminEmail: admin[0].Email });
+        return res.status(200).json({ message: "OK", name: admin[0].admin_Name, email: admin[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message })

@@ -57,7 +57,7 @@ export const studentLogin = async (
             signed: true
         });
 
-        return res.status(201).json({ message: "OK", studentName: existingStudent[0].Student_Name, studentEmail: existingStudent[0].Email });
+        return res.status(201).json({ message: "OK", name: existingStudent[0].Student_Name, email: existingStudent[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
@@ -79,7 +79,7 @@ export const verifyStudent = async (
         if (Student[0].Student_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
 
-        return res.status(200).json({ message: "OK", StudentName: Student[0].Student_Name, StudentEmail: Student[0].Email });
+        return res.status(200).json({ message: "OK", name: Student[0].Student_Name, email: Student[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
@@ -107,7 +107,7 @@ export const studentLogout = async (
             path: "/"
         });
 
-        return res.status(200).json({ message: "OK", StudentName: Student[0].Student_Name, StudentEmail: Student[0].Email });
+        return res.status(200).json({ message: "OK", name: Student[0].Student_Name, email: Student[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message })

@@ -32,7 +32,7 @@ export const teacherLogin = async (
         if (!existingTeacher || existingTeacher.length === 0)
             return res.status(200).json({ message: "ERROR", cause: "Teacher does not exist" });
 
-        const isPasswordCorrect = await compare(password, existingTeacher[0].password);
+        const isPasswordCorrect = await compare(password, existingTeacher[0].Password);
         if (!isPasswordCorrect)
             return res.status(403).send("Incorrect password...");
 
@@ -57,7 +57,7 @@ export const teacherLogin = async (
             signed: true
         });
 
-        return res.status(201).json({ message: "OK", teacherName: existingTeacher[0].Teacher_Name, teacherEmail: existingTeacher[0].Email });
+        return res.status(201).json({ message: "OK", name: existingTeacher[0].Teacher_Name, email: existingTeacher[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
@@ -79,7 +79,7 @@ export const verifyTeacher = async (
         if (teacher[0].Teacher_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
 
-        return res.status(200).json({ message: "OK", teacherName: teacher[0].Teacher_Name, teacherEmail: teacher[0].Email });
+        return res.status(200).json({ message: "OK", name: teacher[0].Teacher_Name, email: teacher[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
@@ -107,7 +107,7 @@ export const teacherLogout = async (
             path: "/"
         });
 
-        return res.status(200).json({ message: "OK", teacherName: teacher[0].Teacher_Name, teacherEmail: teacher[0].Email });
+        return res.status(200).json({ message: "OK", name: teacher[0].Teacher_Name, email: teacher[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message })
