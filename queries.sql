@@ -63,3 +63,5 @@ alter table RECORD add foreign key(Course_id) references COURSE(Course_id);
 alter table ENROLLED_BY add foreign key(Usn) references STUDENT(Usn);
 
 alter table ENROLLED_BY add foreign key(Course_id) references COURSE(Course_id);
+
+alter table student add Password varchar(72);
