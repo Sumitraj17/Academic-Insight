@@ -1,14 +1,20 @@
-import { Box, Typography, Button, Select, MenuItem, InputLabel } from "@mui/material";
+import { Box, Typography, Button, Select, MenuItem, InputLabel, SelectChangeEvent } from "@mui/material";
 import { IoLogIn } from "react-icons/io5";
 import CustomInput from "../components/shared/CustomInput";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Login = () => {
     const auth = useAuth();
     const navigate = useNavigate();
+    const [type, setType] = useState<"Admin" | "Teacher" | "Student">("Admin")
+
+    const handleChange = (event: SelectChangeEvent) => {
+        event.preventDefault();
+        setType(event.target.value as "Admin" | "Teacher" | "Student");
+    }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -18,7 +24,7 @@ const Login = () => {
 
         try {
             toast.loading("Logging In", { id: "login" });
-            await auth?.login(email, password);
+            await auth?.login(email, password); // add user after changing db
             toast.success("Logged In Successfully!", { id: "login" });
         } catch (error) {
             toast.error("Login In Failed", { id: "login" });
@@ -79,15 +85,23 @@ const Login = () => {
                             fontWeight={600}
                         >
                             Login
-                            <InputLabel id='user-type'>Age</InputLabel>
+                            <InputLabel id='user-type'>Type</InputLabel>
                             <Select
+                                id="user-type-select"
                                 labelId="user-type"
                                 label="Type"
-                                value=''
+                                value={type}
+                                onChange={handleChange}
+                                sx={{
+                                    width: "25rem",
+                                    borderRadius: "10",
+                                    fontSize: 20,
+                                    color: "black"
+                                }}
                             >
-                                <MenuItem>Teacher</MenuItem>
-                                <MenuItem>Student</MenuItem>
-                                <MenuItem>Admin</MenuItem>
+                                <MenuItem value='Admin'>Admin</MenuItem>
+                                <MenuItem value='Teacher'>Teacher</MenuItem>
+                                <MenuItem value='Student'>Student</MenuItem>
                             </Select>
                             <CustomInput name="email" label="Email" type="email" />
                             <CustomInput name="password" label="Password" type="password" />

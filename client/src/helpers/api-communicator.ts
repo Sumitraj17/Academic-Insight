@@ -1,7 +1,13 @@
 import axios from "axios"
 
-export const checkAuthStatus = async () => {
-    const res = await axios.get("/user/auth-status");
+// type User = {
+//     name: string;
+//     email: string;
+//     type: "ADMIN" | "TEACHER" | "STUDENT";
+// }
+
+export const checkAuthStatus = async () => { //add user after changing db
+    const res = await axios.get(`teacher/auth-status`);
 
     if (res.status !== 200)
         throw new Error("[AUTHENTICATION_ERROR] Unable to authenticate user...");
@@ -10,8 +16,8 @@ export const checkAuthStatus = async () => {
     return data;
 }
 
-export const userLogin = async (email: string, password: string) => {
-    const res = await axios.post("/user/login", { email, password });
+export const userLogin = async (email: string, password: string) => { //add user after changing db
+    const res = await axios.post(`teacher/login`, { email, password });
 
     if (res.status !== 201)
         throw new Error("Unable to login...");

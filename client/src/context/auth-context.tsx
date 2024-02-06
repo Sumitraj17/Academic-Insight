@@ -4,6 +4,7 @@ import { checkAuthStatus, userLogin } from "../helpers/api-communicator";
 type User = {
     name: string;
     email: string;
+    // type: "ADMIN" | "TEACHER" | "STUDENT";
 }
 
 type UserAuth = {
@@ -21,20 +22,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         async function checkStatus() {
-            const data = await checkAuthStatus();
+            const data = await checkAuthStatus(); // add user after changing db
             if (data) {
                 setUser({ email: data.email, name: data.name });
                 setIsLoggedIn(true);
             }
         }
-        checkStatus();
+        checkStatus()
     }, []);
 
     const login = async (email: string, password: string) => {
         const data = await userLogin(email, password);
 
         if (data) {
-            setUser({ email: data.email, name: data.name });
+            setUser({ email: data.email, name: data.name }); // add user after changing db
             setIsLoggedIn(true);
         }
     }

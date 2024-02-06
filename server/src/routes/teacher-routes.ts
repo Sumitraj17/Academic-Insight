@@ -6,6 +6,8 @@ import { verifyToken } from "../utils/token-manager.js";
 const teacherRouter = Router();
 
 teacherRouter.get("/", getAllTeachers);
-teacherRouter.post("/login", validate(loginValidator), teacherLogin);
+teacherRouter.post("/login", teacherLogin);
 teacherRouter.get("/auth-status", verifyToken, verifyTeacher);
 teacherRouter.get("/logout", verifyToken, teacherLogout);
+
+export default teacherRouter;

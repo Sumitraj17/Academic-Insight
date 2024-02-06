@@ -1,10 +1,10 @@
 import { Router } from "express";
-import userRouter from "./admin-routes.js";
+import teacherRouter from "./teacher-routes.js";
 import adminRouter from "./admin-routes.js";
 
 const appRouter = Router();
 
 appRouter.use('/admin', adminRouter);
-appRouter.use('/teacher', userRouter);
+appRouter.use('/teacher', teacherRouter);
 
 export default appRouter;

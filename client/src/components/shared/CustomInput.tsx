@@ -11,7 +11,7 @@ const CustomInput = ({ name, type, label }: CustomInputProps) => {
         <TextField
             margin="normal"
             InputLabelProps={{ style: { color: "black" } }}
-            InputProps={{ style: { width: "400px", borderRadius: "10", fontSize: 20, color: "black" } }}
+            InputProps={{ style: { width: "25rem", borderRadius: "10", fontSize: 20, color: "black" } }}
             name={name}
             label={label}
             type={type}
