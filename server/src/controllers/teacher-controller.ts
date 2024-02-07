@@ -4,6 +4,7 @@ import { compare } from "bcrypt";
 import { COOKIE_NAME } from "../utils/constants.js";
 import { createToken } from "../utils/token-manager.js";
 import { Teacher } from "../interfaces/teacher.js";
+import xlsx from 'xlsx';
 
 export const getAllTeachers = async (
     req: Request,
@@ -19,6 +20,34 @@ export const getAllTeachers = async (
     }
 }
 
+
+export const dataSheet = async(
+    req:Request,
+    res:Response,
+    next:NextFunction
+)=>{
+    try{
+        const {file} = req.body;
+
+        let reader = xlsx.readFile(file);
+
+        let data = [];
+
+        const worksheet = reader.Sheets[reader.SheetNames[0]];
+
+        const temp = xlsx.utils.sheet_to_json(worksheet);
+
+        temp.forEach((res) =>{
+            data.push(res);
+        })
+
+        return data;
+
+    }
+    catch(error){
+        return res.status(200).json({ message: "ERROR", cause: error.message });
+    }
+}
 export const teacherLogin = async (
     req: Request,
     res: Response,
@@ -27,12 +56,12 @@ export const teacherLogin = async (
     try {
         const { email, password } = req.body;
         const [existingTeacher] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher WHERE Email = ?", [email]);
-
         // Check if user is present in DB
         if (!existingTeacher || existingTeacher.length === 0)
             return res.status(200).json({ message: "ERROR", cause: "Teacher does not exist" });
 
-        const isPasswordCorrect = await compare(password, existingTeacher[0].Password);
+        // const isPasswordCorrect = await compare(password, existingTeacher[0].Password);
+        const isPasswordCorrect = password == existingTeacher[0].Password;
         if (!isPasswordCorrect)
             return res.status(403).send("Incorrect password...");
 
@@ -48,7 +77,6 @@ export const teacherLogin = async (
         const token = createToken(existingTeacher[0].Teacher_id, existingTeacher[0].Email, "7d");
         const expires = new Date();
         expires.setDate(expires.getDate() + 7);
-
         res.cookie(COOKIE_NAME, token, {
             path: "/",
             domain: process.env.DOMAIN,
@@ -59,10 +87,11 @@ export const teacherLogin = async (
 
         return res.status(201).json({ message: "OK", name: existingTeacher[0].Teacher_Name, email: existingTeacher[0].Email });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
     }
 }
+
 
 export const verifyTeacher = async (
     req: Request,
