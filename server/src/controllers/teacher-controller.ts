@@ -95,7 +95,7 @@ export const teacherLogout = async (
         const [teacher] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher WHERE Teacher_id = ?", [res.locals.jwtData.id]);
 
         if (!teacher[0])
-            return res.status(401).send("Teacherteacher not registered or Token malfunction...");
+            return res.status(401).send("Teacher not registered or Token malfunction...");
 
         if (teacher[0].Teacher_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
@@ -110,6 +110,6 @@ export const teacherLogout = async (
         return res.status(200).json({ message: "OK", name: teacher[0].Teacher_Name, email: teacher[0].Email });
     } catch (error) {
         console.log(error);
-        return res.status(200).json({ message: "ERROR", cause: error.message })
+        return res.status(201).json({ message: "ERROR", cause: error.message })
     }
 }
