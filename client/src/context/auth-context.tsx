@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await userLogout();
         setIsLoggedIn(false);
         setUser(null);
-        window.location.reload();
+        window.location.href = "/";
     }
 
     const value = {
