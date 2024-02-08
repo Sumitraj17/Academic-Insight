@@ -35,15 +35,16 @@ const Logout = () => {
             mt: 2,
             width: "400px",
             borderRadius: 2,
-            bgcolor: "white",
-            hover: {
+            bgcolor: "lightblue",
+            color: "red",
+            "hover": {
               bgcolor: "black",
               color: "white",
             },
           }}
           endIcon={<IoLogIn />}
         >
-          Login
+          Logout
         </Button>
       </form>
     </div>
