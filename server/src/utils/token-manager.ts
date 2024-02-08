@@ -9,9 +9,9 @@ export const createToken = (
 ) => {
     const payload = { id, email }
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
-
     return token;
 }
+
 
 export const verifyToken = async (
     req: Request,

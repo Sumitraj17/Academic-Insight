@@ -40,5 +40,10 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
-  }
+  },
+  "description": "1. Pull the code from github using: `git pull origin main`\r 2. Open terminal and type the command: `npm i` to install all dependencies required.\r 3. Make your changes in the src folder.\r 4. Use the command: `npm run dev` to run the program.",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

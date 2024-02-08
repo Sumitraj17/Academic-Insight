@@ -27,6 +27,7 @@ const Login = () => {
             await auth?.login(email, password); // add user after changing db
             toast.success("Logged In Successfully!", { id: "login" });
         } catch (error) {
+            console.log(error);
             toast.error("Login In Failed", { id: "login" });
         }
     }

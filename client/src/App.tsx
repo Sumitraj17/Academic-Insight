@@ -4,6 +4,7 @@ import Home from "./pages/Home"
 import Login from "./pages/Login"
 import { useAuth } from "./context/auth-context"
 import Marks from "./pages/Marks"
+import Logout from "./pages/Logout"
 
 const App = () => {
     const auth = useAuth();
@@ -17,6 +18,9 @@ const App = () => {
                 {auth?.isLoggedIn && auth?.user && (
                     <Route path="/marks" element={<Marks />} />
                 )}
+                {auth?.isLoggedIn}(
+                    <Route path="/logout" element={<Logout/>}/>
+                )
             </Routes>
         </main>
     )

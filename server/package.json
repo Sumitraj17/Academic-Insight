@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "1. Pull the code from github using: `git pull origin main`\r 2. Open terminal and type the command: `npm i` to install all dependencies required.\r 3. Make your changes in the src folder.\r 4. Use the command: `npm run dev` to run the program.",
   "main": "index.ts",
   "type": "module",
   "scripts": {
@@ -23,7 +23,8 @@
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.1",
     "morgan": "^1.10.0",
-    "mysql2": "^3.7.0"
+    "mysql2": "^3.7.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

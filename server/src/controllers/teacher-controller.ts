@@ -21,7 +21,7 @@ export const getAllTeachers = async (
 }
 
 
-export const dataSheet = async(
+export const markSheet = async(
     req:Request,
     res:Response,
     next:NextFunction
@@ -41,7 +41,10 @@ export const dataSheet = async(
             data.push(res);
         })
 
-        return data;
+        // data.forEach(element =>{
+        //     await connection.promise().query("Insert into student[] values()",())
+        // })
+       
 
     }
     catch(error){
