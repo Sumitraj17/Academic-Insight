@@ -26,11 +26,11 @@ export const userLogin = async (email: string, password: string) => { //add user
     return data;
 }
 
-export const userLogout = async() => {
+export const userLogout = async () => {
     const res = await axios.get('teacher/logout');
 
-    if(res.status !==200)
-        throw new Error("Unable to Logout....");
+    if (res.status !== 200)
+        throw new Error("Unable to logout...");
 
     const data = await res.data;
     return data;
