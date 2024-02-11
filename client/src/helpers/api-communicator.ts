@@ -16,10 +16,14 @@ export const checkAuthStatus = async () => { //add user after changing db
     return data;
 }
 
-export const userLogin = async (email: string, password: string) => { //add user after changing db
-    const res = await axios.post(`teacher/login`, { email, password });
+export const userLogin = async (email: string, password: string, type: string) => { //add user after changing db
+    let res = null;
+    if (type === 'Admin' && email === 'hod.cse@rnsit.ac.in')
+        res = await axios.post(`admin/login`, { email, password });
+    else
+        res = await axios.post(`${type}/login`, { email, password });
 
-    if (res.status !== 201)
+    if (res?.status !== 201 || res === null)
         throw new Error("Unable to login...");
 
     const data = await res.data;

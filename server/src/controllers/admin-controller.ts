@@ -4,6 +4,7 @@ import { compare } from "bcrypt";
 import { COOKIE_NAME } from "../utils/constants.js";
 import { createToken } from "../utils/token-manager.js";
 import { Admin } from "../interfaces/admin.js";
+import { upload } from "../app.js";
 
 export const getAllAdmins = async (
     req: Request,
@@ -57,7 +58,7 @@ export const adminLogin = async (
             signed: true
         });
 
-        return res.status(201).json({ message: "OK", name: existingAdmin[0].Admin_Name, email: existingAdmin[0].Email });
+        return res.status(201).json({ message: "OK", name: existingAdmin[0].Admin_Name, email: existingAdmin[0].Email, type: 'Admin' });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
@@ -97,7 +98,7 @@ export const adminLogout = async (
         if (!admin[0])
             return res.status(401).send("Admin not registered or Token malfunction...");
 
-        if (admin[0].admin_id !== res.locals.jwtData.id)
+        if (admin[0].Admin_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
 
         res.clearCookie(COOKIE_NAME, {
@@ -112,4 +113,46 @@ export const adminLogout = async (
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message })
     }
+}
+
+export const fileUploadStudent = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    upload(req, res, async (err: any) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ message: "Error uploading file for student", error: err.message })
+        }
+
+        try {
+            const [result] = await connection.promise().query("") //write the query after reading data
+            return res.status(201).json({ message: "Student file uploaded successfully" });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Error storing file information for students", error: error.message })
+        }
+    })
+}
+
+export const fileUploadTeacher = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    upload(req, res, async (err: any) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ message: "Error uploading file for teacher", error: err.message })
+        }
+
+        try {
+            const [result] = await connection.promise().query("") //write the query after reading data
+            return res.status(201).json({ message: "Teacher file uploaded successfully" });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Error storing file information for teacher", error: error.message })
+        }
+    })
 }

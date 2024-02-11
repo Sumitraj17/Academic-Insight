@@ -4,13 +4,13 @@ import { checkAuthStatus, userLogin, userLogout, } from "../helpers/api-communic
 type User = {
     name: string;
     email: string;
-    // type: "ADMIN" | "TEACHER" | "STUDENT";
+    type: string;
 }
 
 type UserAuth = {
     isLoggedIn: boolean;
     user: User | null;
-    login: (email: string, password: string) => Promise<void>;
+    login: (email: string, password: string, type: string) => Promise<void>;
     logout: () => Promise<void>;
 }
 
@@ -24,18 +24,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         async function checkStatus() {
             const data = await checkAuthStatus(); // add user after changing db
             if (data) {
-                setUser({ email: data.email, name: data.name });
+                setUser({ email: data.email, name: data.name, type: data.type });
                 setIsLoggedIn(true);
             }
         }
         checkStatus()
     }, []);
 
-    const login = async (email: string, password: string) => {
-        const data = await userLogin(email, password);
+    const login = async (email: string, password: string, type: string) => {
+        const data = await userLogin(email, password, type);
 
         if (data) {
-            setUser({ email: data.email, name: data.name }); // add user after changing db
+            setUser({ email: data.email, name: data.name, type: data.type }); // add user after changing db
             setIsLoggedIn(true);
         }
     }
