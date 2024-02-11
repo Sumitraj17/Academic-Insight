@@ -24,6 +24,7 @@ const Header = () => {
                                 to="/logout"
                                 text="Logout"
                                 textColor="black"
+                                onClick={auth?.logout}
                             />
                         </>
                     ) : (
