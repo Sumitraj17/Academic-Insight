@@ -4,6 +4,7 @@ import { compare } from "bcrypt";
 import { COOKIE_NAME } from "../utils/constants.js";
 import { createToken } from "../utils/token-manager.js";
 import { Teacher } from "../interfaces/teacher.js";
+import { upload } from "../app.js";
 
 export const getAllTeachers = async (
     req: Request,
@@ -30,7 +31,7 @@ export const teacherLogin = async (
 
         // Check if user is present in DB
         if (!existingTeacher || existingTeacher.length === 0)
-            return res.status(200).json({ message: "ERROR", cause: "Teacher does not exist" });
+            return res.status(201).json({ message: "ERROR", cause: "Teacher does not exist" });
 
         const isPasswordCorrect = await compare(password, existingTeacher[0].Password);
         if (!isPasswordCorrect)
@@ -95,7 +96,7 @@ export const teacherLogout = async (
         const [teacher] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher WHERE Teacher_id = ?", [res.locals.jwtData.id]);
 
         if (!teacher[0])
-            return res.status(401).send("Teacherteacher not registered or Token malfunction...");
+            return res.status(401).send("Teacher not registered or Token malfunction...");
 
         if (teacher[0].Teacher_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
@@ -111,5 +112,24 @@ export const teacherLogout = async (
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message })
+    }
+}
+
+export const handleFileUpload = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const file = req.file;
+
+        if (!file)
+            return res.status(400).json({ message: "No file uploaded" });
+
+
+        return res.status(201).json({ message: "File uploaded successfully" });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Error uploading file", error: error.message });
     }
 }

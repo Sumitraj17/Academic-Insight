@@ -35,3 +35,13 @@ export const userLogout = async () => {
     const data = await res.data;
     return data;
 }
+
+export const fileUploadTeacher = async (formData: FormData) => {
+    const res = await axios.post('/teacher/upload-file', formData);
+
+    if (res.status !== 201)
+        throw new Error("Unable to send file");
+
+    const data = await res.data;
+    return data;
+}
