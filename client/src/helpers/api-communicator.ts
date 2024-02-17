@@ -1,4 +1,5 @@
-import axios from "axios"
+import axios from "axios";
+import { Student } from "../interfaces/Student";
 
 // type User = {
 //     name: string;
@@ -43,5 +44,11 @@ export const fileUploadTeacher = async (formData: FormData) => {
         throw new Error("Unable to send file");
 
     const data = await res.data;
+    return data;
+}
+
+export const fetchData = async () => {
+    const res = await axios.get<{ students: Student[] }>("/teacher/get-marks");
+    const data = res.data.students;
     return data;
 }

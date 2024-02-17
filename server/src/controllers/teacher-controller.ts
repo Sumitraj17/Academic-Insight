@@ -133,3 +133,25 @@ export const handleFileUpload = async (
         return res.status(500).json({ message: "Error uploading file", error: error.message });
     }
 }
+
+export const getMarks = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const [existingTeacher] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher WHERE Teacher_id = ?", [res.locals.jwtData.id]);
+
+    if (!existingTeacher[0])
+        return res.status(401).send("Teacher not registered or Token malfunction...");
+
+    if (existingTeacher[0].Teacher_id !== res.locals.jwtData.id)
+        return res.status(401).send("Permissions did not match...");
+
+    try {
+        const [students] = await connection.promise().query("SELECT * FROM teacher");
+        return res.status(200).json({ message: "OK", students: students });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Error fetching marks", error: error.message });
+    }
+}

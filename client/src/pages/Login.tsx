@@ -33,7 +33,7 @@ const Login = () => {
 
     useEffect(() => {
         if (auth?.user)
-            return navigate("/marks");
+            return navigate("/view-marks");
     }, [auth]);
 
     return (
