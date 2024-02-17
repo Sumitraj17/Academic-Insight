@@ -7,8 +7,8 @@ import { Student } from "../interfaces/Student";
 //     type: "ADMIN" | "TEACHER" | "STUDENT";
 // }
 
-export const checkAuthStatus = async () => { //add user after changing db
-    const res = await axios.get(`teacher/auth-status`);
+export const checkAuthStatus = async (type:string) => { //add user after changing db
+    const res = await axios.get(`${type}/auth-status`);
 
     if (res.status !== 200)
         throw new Error("[AUTHENTICATION_ERROR] Unable to authenticate user...");
@@ -17,8 +17,8 @@ export const checkAuthStatus = async () => { //add user after changing db
     return data;
 }
 
-export const userLogin = async (email: string, password: string) => { //add user after changing db
-    const res = await axios.post(`teacher/login`, { email, password });
+export const userLogin = async (type: string ,email: string, password: string) => { //add user after changing db
+    const res = await axios.post(`${type}/login`, { email, password });
 
     if (res.status !== 201)
         throw new Error("Unable to login...");

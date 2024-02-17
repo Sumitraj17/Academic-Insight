@@ -4,14 +4,15 @@ import { checkAuthStatus, userLogin, userLogout } from "../helpers/api-communica
 type User = {
     name: string;
     email: string;
-    // type: "ADMIN" | "TEACHER" | "STUDENT";
+    // type: "admin" | "teacher" | "student";
 }
 
 type UserAuth = {
     isLoggedIn: boolean;
     user: User | null;
-    login: (email: string, password: string) => Promise<void>;
+    login: (type: string,email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
+    type : string|"admin";
 }
 
 const AuthContext = createContext<UserAuth | null>(null);
@@ -19,10 +20,15 @@ const AuthContext = createContext<UserAuth | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [type,setType] = useState(()=>{
+         // Retrieve the user type from localStorage on component mount
+        const storedType = localStorage.getItem('userType');
+        return storedType || 'admin'; // Default to 'admin' if not found
+    });
 
     useEffect(() => {
         async function checkStatus() {
-            const data = await checkAuthStatus(); // add user after changing db
+            const data = await checkAuthStatus(type); // add user after changing db
             if (data) {
                 setUser({ email: data.email, name: data.name });
                 setIsLoggedIn(true);
@@ -31,12 +37,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         checkStatus()
     }, []);
 
-    const login = async (email: string, password: string) => {
-        const data = await userLogin(email, password);
+    const login = async (type:string, email: string, password: string) => {
+        const data = await userLogin(type,email, password);
 
         if (data) {
             setUser({ email: data.email, name: data.name }); // add user after changing db
             setIsLoggedIn(true);
+            setType(type);
+            localStorage.setItem('userType',type);
         }
     }
 
@@ -45,6 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (data) {
             setUser(null);
             setIsLoggedIn(false);
+            localStorage.removeItem('userType');
             window.location.assign('/');
         }
     }
@@ -53,7 +62,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         user,
         isLoggedIn,
         login,
-        logout
+        logout,
+        type
     }
 
     return (
