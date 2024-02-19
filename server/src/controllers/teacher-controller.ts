@@ -22,6 +22,32 @@ export const getAllTeachers = async (
     }
 }
 
+export const markSheet = async(
+    req:Request,
+    res:Response,
+    next:NextFunction
+)=>{
+    try{
+        const {file} = req.body;
+
+        let reader = xlsx.readFile(file);
+
+        let data = [];
+
+        const worksheet = reader.Sheets[reader.SheetNames[0]];
+
+        const temp = xlsx.utils.sheet_to_json(worksheet);
+
+        temp.forEach((res) =>{
+            data.push(res);
+        })
+       return data
+    }
+    catch(error){
+        return res.status(200).json({ message: "ERROR", cause: error.message });
+    }
+}
+
 export const teacherLogin = async (
     req: Request,
     res: Response,

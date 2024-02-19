@@ -1,5 +1,3 @@
-Certainly! Here is the complete Markdown content for your README file:
-
 # Academic Insight
 
 Academic Insight is a robust web application designed to simplify the management of student marks and attendance for educational institutions. This project offers a user-friendly graphical interface for teachers to effortlessly upload, calculate, and display final scores and attendance records. Additionally, students can securely access their individual performance metrics.

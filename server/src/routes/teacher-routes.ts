@@ -7,7 +7,10 @@ import { upload } from "../app.js";
 const teacherRouter = Router();
 
 teacherRouter.get("/", getAllTeachers);
+
 teacherRouter.post("/login", validate(loginValidator), teacherLogin);
+teacherRouter.post("/login", teacherLogin);
+teacherRouter.post("/mark-sheet",markSheet);
 teacherRouter.get("/auth-status", verifyToken, verifyTeacher);
 teacherRouter.post("/upload-file", verifyToken, upload.single('file'), handleFileUpload);
 teacherRouter.get("/get-marks", verifyToken, getMarks);
