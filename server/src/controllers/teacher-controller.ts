@@ -5,6 +5,8 @@ import { COOKIE_NAME } from "../utils/constants.js";
 import { createToken } from "../utils/token-manager.js";
 import { Teacher } from "../interfaces/teacher.js";
 import { upload } from "../app.js";
+import { config } from "dotenv";
+config();
 
 export const getAllTeachers = async (
     req: Request,
@@ -17,6 +19,32 @@ export const getAllTeachers = async (
     } catch (err) {
         console.log(err);
         return res.status(200).json({ message: "Error", error: err.message });
+    }
+}
+
+export const markSheet = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { file } = req.body;
+
+        let reader = xlsx.readFile(file);
+
+        let data = [];
+
+        const worksheet = reader.Sheets[reader.SheetNames[0]];
+
+        const temp = xlsx.utils.sheet_to_json(worksheet);
+
+        temp.forEach((res) => {
+            data.push(res);
+        })
+        return data
+    }
+    catch (error) {
+        return res.status(200).json({ message: "ERROR", cause: error.message });
     }
 }
 
@@ -33,8 +61,8 @@ export const teacherLogin = async (
         if (!existingTeacher || existingTeacher.length === 0)
             return res.status(201).json({ message: "ERROR", cause: "Teacher does not exist" });
 
-        const isPasswordCorrect = await compare(password, existingTeacher[0].Password);
-        // const isPasswordCorrect = password === existingTeacher[0].Password;
+        // const isPasswordCorrect = await compare(password, existingTeacher[0].Password);
+        const isPasswordCorrect = password == existingTeacher[0].Password;
         if (!isPasswordCorrect)
             return res.status(403).send("Incorrect password...");
 
@@ -58,7 +86,7 @@ export const teacherLogin = async (
             httpOnly: true,
             signed: true
         });
-
+        console.log(token);
         return res.status(201).json({ message: "OK", name: existingTeacher[0].Teacher_Name, email: existingTeacher[0].Email });
     } catch (error) {
         console.log(error);

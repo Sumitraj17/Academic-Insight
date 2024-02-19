@@ -6,4 +6,5 @@ export interface Admin extends Teacher {
     Password: string;
     Email: string;
     Phone_Number: string;
+    isAdmin: string;
 }
