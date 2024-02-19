@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TablePagination, Skeleton } from "@mui/material";
+import { Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TablePagination, Skeleton, Typography } from "@mui/material";
 import { useState } from "react";
 import { fetchData } from '../helpers/api-communicator';
 
@@ -42,7 +42,6 @@ const SkeletonLoader = ({ rowsPerPage }: { rowsPerPage: number }) => {
             </Paper>
         </>
     )
-
 }
 
 interface StudentColumn {
@@ -82,7 +81,9 @@ const Marks = () => {
 
     return (
         <div>
-            Student details:
+            <Typography variant="h4" gutterBottom component="div">
+                Student Details
+            </Typography>
             {isPending && (
                 <SkeletonLoader rowsPerPage={rowsPerPage} />
             )}

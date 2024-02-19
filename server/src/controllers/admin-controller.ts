@@ -33,6 +33,7 @@ export const adminLogin = async (
             return res.status(200).json({ message: "ERROR", cause: "Admin does not exist" });
 
         const isPasswordCorrect = await compare(password, existingAdmin[0].Password);
+        // const isPasswordCorrect = password === existingAdmin[0].Password;
         if (!isPasswordCorrect)
             return res.status(403).send("Incorrect password...");
 
