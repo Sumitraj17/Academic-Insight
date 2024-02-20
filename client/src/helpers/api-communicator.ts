@@ -7,7 +7,7 @@ import { Student } from "../interfaces/Student";
 //     type: "ADMIN" | "TEACHER" | "STUDENT";
 // }
 
-export const checkAuthStatus = async (type:string) => { //add user after changing db
+export const checkAuthStatus = async (type: string) => { //add user after changing db
     const res = await axios.get(`${type}/auth-status`);
 
     if (res.status !== 200)
@@ -17,7 +17,7 @@ export const checkAuthStatus = async (type:string) => { //add user after changin
     return data;
 }
 
-export const userLogin = async (type: string ,email: string, password: string) => { //add user after changing db
+export const userLogin = async (type: string, email: string, password: string) => { //add user after changing db
     const res = await axios.post(`${type}/login`, { email, password });
 
     if (res.status !== 201)

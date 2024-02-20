@@ -9,6 +9,7 @@ interface CustomInputProps {
 const CustomInput = ({ name, type, label }: CustomInputProps) => {
     return (
         <TextField
+            id={name}
             margin="normal"
             InputLabelProps={{ style: { color: "black" } }}
             InputProps={{ style: { width: "25rem", borderRadius: "10", fontSize: 20, color: "black" } }}

@@ -10,9 +10,9 @@ type User = {
 type UserAuth = {
     isLoggedIn: boolean;
     user: User | null;
-    login: (type: string,email: string, password: string) => Promise<void>;
+    login: (type: string, email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
-    type : string|"admin";
+    type: string | "admin";
 }
 
 const AuthContext = createContext<UserAuth | null>(null);
@@ -20,8 +20,8 @@ const AuthContext = createContext<UserAuth | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [type,setType] = useState(()=>{
-         // Retrieve the user type from localStorage on component mount
+    const [type, setType] = useState(() => {
+        // Retrieve the user type from localStorage on component mount
         const storedType = localStorage.getItem('userType');
         return storedType || 'admin'; // Default to 'admin' if not found
     });
@@ -32,19 +32,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             if (data) {
                 setUser({ email: data.email, name: data.name });
                 setIsLoggedIn(true);
+                setType(type);
             }
         }
         checkStatus()
     }, []);
 
-    const login = async (type:string, email: string, password: string) => {
-        const data = await userLogin(type,email, password);
+    const login = async (type: string, email: string, password: string) => {
+        const data = await userLogin(type, email, password);
 
         if (data) {
             setUser({ email: data.email, name: data.name }); // add user after changing db
             setIsLoggedIn(true);
             setType(type);
-            localStorage.setItem('userType',type);
+            localStorage.setItem('userType', type);
         }
     }
 
