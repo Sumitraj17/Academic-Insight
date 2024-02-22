@@ -16,7 +16,7 @@ const NavLink = ({ to, bg, text, textColor, onClick }: NavLinkProps) => {
             to={to}
             style={{
                 background: bg,
-                color: textColor
+                color: textColor,
             }}
         >
             {text}

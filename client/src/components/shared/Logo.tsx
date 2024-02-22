@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material"
 import { Link } from "react-router-dom"
 
 const Logo = () => {
@@ -8,15 +9,18 @@ const Logo = () => {
             alignItems: "center",
             gap: "15px"
         }}>
-            <Link to={"https://www.rnsit.ac.in/"}>
+            <Link
+                to={"https://www.rnsit.ac.in/"}
+            >
                 <img
                     src="rns-logo.jpeg"
                     alt="rnsit-logo"
-                    width="40px"
-                    height="40px"
+                    width="60px"
+                    height="60px"
                 />
             </Link>
-        </div>
+            <Typography variant='h6'>RNS Institute of Technology</Typography>
+        </div >
     )
 }
 

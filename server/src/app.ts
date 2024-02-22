@@ -40,5 +40,4 @@ const upload = multer({ storage: storage });
 
 //remove in production environment
 app.use(morgan('dev'));
-
 export { app, upload };

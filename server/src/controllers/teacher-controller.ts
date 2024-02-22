@@ -5,44 +5,19 @@ import { COOKIE_NAME } from "../utils/constants.js";
 import { createToken } from "../utils/token-manager.js";
 import { Teacher } from "../interfaces/teacher.js";
 import xlsx from "xlsx";
+import { Student } from "../interfaces/student.js";
 
-export const getAllTeachers = async (
+export const getAllStudents = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     try {
-        const [teachers] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher");
+        const [teachers] = await connection.promise().query<Student[]>("SELECT * FROM student");
         return res.status(200).json({ message: "OK", teachers: teachers });
     } catch (err) {
         console.log(err);
         return res.status(200).json({ message: "Error", error: err.message });
-    }
-}
-
-export const markSheet = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    try {
-        const { file } = req.body;
-
-        let reader = xlsx.readFile(file);
-
-        let data = [];
-
-        const worksheet = reader.Sheets[reader.SheetNames[0]];
-
-        const temp = xlsx.utils.sheet_to_json(worksheet);
-
-        temp.forEach((res) => {
-            data.push(res);
-        })
-        return data
-    }
-    catch (error) {
-        return res.status(200).json({ message: "ERROR", cause: error.message });
     }
 }
 
@@ -59,8 +34,8 @@ export const teacherLogin = async (
         if (!existingTeacher || existingTeacher.length === 0)
             return res.status(201).json({ message: "ERROR", cause: "Teacher does not exist" });
 
-        const isPasswordCorrect = await compare(password, existingTeacher[0].Password);
-        // const isPasswordCorrect = password == existingTeacher[0].Password;
+        // const isPasswordCorrect = await compare(password, existingTeacher[0].Password);
+        const isPasswordCorrect = password == existingTeacher[0].password;
         if (!isPasswordCorrect)
             return res.status(403).send("Incorrect password...");
 
@@ -73,7 +48,7 @@ export const teacherLogin = async (
         });
 
         // Create a token for the teacher and store cookie
-        const token = createToken(existingTeacher[0].Teacher_id, existingTeacher[0].Email, "7d");
+        const token = createToken(existingTeacher[0].teacher_id, existingTeacher[0].email, "7d");
         const expires = new Date();
         expires.setDate(expires.getDate() + 7);
 
@@ -84,8 +59,8 @@ export const teacherLogin = async (
             httpOnly: true,
             signed: true
         });
-        console.log(token);
-        return res.status(201).json({ message: "OK", name: existingTeacher[0].Teacher_Name, email: existingTeacher[0].Email });
+
+        return res.status(201).json({ message: "OK", name: existingTeacher[0].teacher_name, email: existingTeacher[0].email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
@@ -104,10 +79,10 @@ export const verifyTeacher = async (
             return res.status(401).send("Teacher not registered or Token malfunction...");
 
 
-        if (teacher[0].Teacher_id !== res.locals.jwtData.id)
+        if (teacher[0].teacher_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
 
-        return res.status(200).json({ message: "OK", name: teacher[0].Teacher_Name, email: teacher[0].Email });
+        return res.status(200).json({ message: "OK", name: teacher[0].teacher_name, email: teacher[0].email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
@@ -125,7 +100,7 @@ export const teacherLogout = async (
         if (!teacher[0])
             return res.status(401).send("Teacher not registered or Token malfunction...");
 
-        if (teacher[0].Teacher_id !== res.locals.jwtData.id)
+        if (teacher[0].teacher_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
 
         res.clearCookie(COOKIE_NAME, {
@@ -135,7 +110,7 @@ export const teacherLogout = async (
             path: "/"
         });
 
-        return res.status(200).json({ message: "OK", name: teacher[0].Teacher_Name, email: teacher[0].Email });
+        return res.status(200).json({ message: "OK", name: teacher[0].teacher_Name, email: teacher[0].email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message })
@@ -153,7 +128,6 @@ export const handleFileUpload = async (
         if (!file)
             return res.status(400).json({ message: "No file uploaded" });
 
-
         return res.status(201).json({ message: "File uploaded successfully" });
     } catch (error) {
         console.log(error);
@@ -161,22 +135,14 @@ export const handleFileUpload = async (
     }
 }
 
-export const getMarks = async (
+export const getRecords = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const [existingTeacher] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher WHERE Teacher_id = ?", [res.locals.jwtData.id]);
-
-    if (!existingTeacher[0])
-        return res.status(401).send("Teacher not registered or Token malfunction...");
-
-    if (existingTeacher[0].Teacher_id !== res.locals.jwtData.id)
-        return res.status(401).send("Permissions did not match...");
-
     try {
-        const [students] = await connection.promise().query("SELECT * FROM teacher");
-        return res.status(200).json({ message: "OK", students: students });
+        const [records] = await connection.promise().query(`CALL DisplayStudentRecordsForTeacher(2, '5A', 'CS101')`);
+        return res.status(200).json({ message: "OK", records: records[0] });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Error fetching marks", error: error.message });

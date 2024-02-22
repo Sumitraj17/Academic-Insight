@@ -92,7 +92,9 @@ const Login = () => {
                             fontWeight={600}
                         >
                             Login
-                            <InputLabel id='user-type'>Type</InputLabel>
+                            <InputLabel id='user-type' sx={{
+                                marginTop: '1.3rem'
+                            }}>Type</InputLabel>
                             <Select
                                 id="user-type-select"
                                 labelId="user-type"
