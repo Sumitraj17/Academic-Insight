@@ -18,7 +18,7 @@ import { useAuth } from "../context/auth-context";
 const Upload = () => {
     const [file, setFile] = useState<File | null>(null);
     const [fileName, setFileName] = useState<string>('');
-    const [fileType, setFileType] = useState<string>('teacher');
+    const [fileType, setFileType] = useState<"teacher" | "student" | "course" | "marks">('teacher');
     const auth = useAuth();
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -27,8 +27,8 @@ const Upload = () => {
         setFileName(selectedFile?.name || '');
     }
 
-    const handleTypeChange = (event: SelectChangeEvent<string>) => {
-        setFileType(event.target.value as string);
+    const handleTypeChange = (event: SelectChangeEvent<"teacher" | "student" | "course" | "marks">) => {
+        setFileType(event.target.value as "teacher" | "student" | "course" | "marks");
     }
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -76,13 +76,14 @@ const Upload = () => {
                     }}>
                         {auth?.type === 'admin' && (
                             <Select
+                                // label='FileType'
                                 value={fileType}
                                 onChange={handleTypeChange}
                                 style={{
                                     marginBottom: '10px',
                                     width: '15rem',
                                     alignSelf: 'center',
-                                    color: 'white'
+                                    color: 'black'
                                 }}
                             >
                                 <MenuItem value="teacher">Teacher Data</MenuItem>
