@@ -1,4 +1,4 @@
-import app from "./app.js";
+import { app } from "./app.js";
 import { connectToDatabase } from "./db/db-connection.js";
 import appRouter from "./routes/index.js";
 

@@ -15,8 +15,14 @@ const Header = () => {
                         <>
                             <NavLink
                                 bg="#ffff"
-                                to="/marks"
-                                text="Marks"
+                                to="/upload"
+                                text="Upload"
+                                textColor="black"
+                            />
+                            <NavLink
+                                bg="#ffff"
+                                to="/view-marks"
+                                text="View Marks"
                                 textColor="black"
                             />
                             <NavLink

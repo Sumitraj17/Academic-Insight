@@ -1,9 +1,10 @@
 import { Routes, Route } from "react-router-dom"
+import { useAuth } from "./context/auth-context"
 import Header from "./components/Header"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
-import { useAuth } from "./context/auth-context"
 import Marks from "./pages/Marks"
+import Upload from "./pages/Upload";
 
 const App = () => {
     const auth = useAuth();
@@ -15,7 +16,10 @@ const App = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 {auth?.isLoggedIn && auth?.user && (
-                    <Route path="/marks" element={<Marks />} />
+                    <Route path="/upload" element={<Upload />} />
+                )}
+                {auth?.isLoggedIn && auth?.user && (
+                    <Route path="/view-marks" element={<Marks />} />
                 )}
             </Routes>
         </main>

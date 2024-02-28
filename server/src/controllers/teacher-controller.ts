@@ -4,6 +4,7 @@ import { compare } from "bcrypt";
 import { COOKIE_NAME } from "../utils/constants.js";
 import { createToken } from "../utils/token-manager.js";
 import { Teacher } from "../interfaces/teacher.js";
+import xlsx from "xlsx";
 
 export const getAllTeachers = async (
     req: Request,
@@ -19,13 +20,13 @@ export const getAllTeachers = async (
     }
 }
 
-export const markSheet = async(
-    req:Request,
-    res:Response,
-    next:NextFunction
-)=>{
-    try{
-        const {file} = req.body;
+export const markSheet = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { file } = req.body;
 
         let reader = xlsx.readFile(file);
 
@@ -35,12 +36,12 @@ export const markSheet = async(
 
         const temp = xlsx.utils.sheet_to_json(worksheet);
 
-        temp.forEach((res) =>{
+        temp.forEach((res) => {
             data.push(res);
         })
-       return data
+        return data
     }
-    catch(error){
+    catch (error) {
         return res.status(200).json({ message: "ERROR", cause: error.message });
     }
 }
@@ -56,9 +57,10 @@ export const teacherLogin = async (
 
         // Check if user is present in DB
         if (!existingTeacher || existingTeacher.length === 0)
-            return res.status(200).json({ message: "ERROR", cause: "Teacher does not exist" });
+            return res.status(201).json({ message: "ERROR", cause: "Teacher does not exist" });
 
         const isPasswordCorrect = await compare(password, existingTeacher[0].Password);
+        // const isPasswordCorrect = password == existingTeacher[0].Password;
         if (!isPasswordCorrect)
             return res.status(403).send("Incorrect password...");
 
@@ -82,7 +84,7 @@ export const teacherLogin = async (
             httpOnly: true,
             signed: true
         });
-
+        console.log(token);
         return res.status(201).json({ message: "OK", name: existingTeacher[0].Teacher_Name, email: existingTeacher[0].Email });
     } catch (error) {
         console.log(error);
@@ -121,7 +123,7 @@ export const teacherLogout = async (
         const [teacher] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher WHERE Teacher_id = ?", [res.locals.jwtData.id]);
 
         if (!teacher[0])
-            return res.status(401).send("Teacherteacher not registered or Token malfunction...");
+            return res.status(401).send("Teacher not registered or Token malfunction...");
 
         if (teacher[0].Teacher_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
@@ -137,5 +139,46 @@ export const teacherLogout = async (
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message })
+    }
+}
+
+export const handleFileUpload = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const file = req.file;
+
+        if (!file)
+            return res.status(400).json({ message: "No file uploaded" });
+
+
+        return res.status(201).json({ message: "File uploaded successfully" });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Error uploading file", error: error.message });
+    }
+}
+
+export const getMarks = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const [existingTeacher] = await connection.promise().query<Teacher[]>("SELECT * FROM teacher WHERE Teacher_id = ?", [res.locals.jwtData.id]);
+
+    if (!existingTeacher[0])
+        return res.status(401).send("Teacher not registered or Token malfunction...");
+
+    if (existingTeacher[0].Teacher_id !== res.locals.jwtData.id)
+        return res.status(401).send("Permissions did not match...");
+
+    try {
+        const [students] = await connection.promise().query("SELECT * FROM teacher");
+        return res.status(200).json({ message: "OK", students: students });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Error fetching marks", error: error.message });
     }
 }

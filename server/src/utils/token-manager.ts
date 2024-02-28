@@ -8,6 +8,7 @@ export const createToken = (
     expiresIn: string
 ) => {
     const payload = { id, email }
+
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 
     return token;
@@ -19,7 +20,6 @@ export const verifyToken = async (
     next: NextFunction
 ) => {
     const token = req.signedCookies[COOKIE_NAME];
-
     if (!token || token.trim() === '')
         return res.status(401).json({ message: "Token not recieved" });
 

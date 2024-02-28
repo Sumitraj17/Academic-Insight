@@ -1,4 +1,5 @@
-import axios from "axios"
+import axios from "axios";
+import { Student } from "../interfaces/Student";
 
 // type User = {
 //     name: string;
@@ -6,8 +7,8 @@ import axios from "axios"
 //     type: "ADMIN" | "TEACHER" | "STUDENT";
 // }
 
-export const checkAuthStatus = async () => { //add user after changing db
-    const res = await axios.get(`teacher/auth-status`);
+export const checkAuthStatus = async (type:string) => { //add user after changing db
+    const res = await axios.get(`${type}/auth-status`);
 
     if (res.status !== 200)
         throw new Error("[AUTHENTICATION_ERROR] Unable to authenticate user...");
@@ -16,8 +17,8 @@ export const checkAuthStatus = async () => { //add user after changing db
     return data;
 }
 
-export const userLogin = async (email: string, password: string) => { //add user after changing db
-    const res = await axios.post(`teacher/login`, { email, password });
+export const userLogin = async (type: string ,email: string, password: string) => { //add user after changing db
+    const res = await axios.post(`${type}/login`, { email, password });
 
     if (res.status !== 201)
         throw new Error("Unable to login...");
@@ -33,5 +34,21 @@ export const userLogout = async () => {
         throw new Error("Unable to logout");
 
     const data = await res.data;
+    return data;
+}
+
+export const fileUploadTeacher = async (formData: FormData) => {
+    const res = await axios.post('/teacher/upload-file', formData);
+
+    if (res.status !== 201)
+        throw new Error("Unable to send file");
+
+    const data = await res.data;
+    return data;
+}
+
+export const fetchData = async () => {
+    const res = await axios.get<{ students: Student[] }>("/teacher/get-marks");
+    const data = res.data.students;
     return data;
 }

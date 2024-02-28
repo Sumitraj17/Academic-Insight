@@ -32,10 +32,13 @@ export const adminLogin = async (
         if (!existingAdmin || existingAdmin.length === 0)
             return res.status(200).json({ message: "ERROR", cause: "Admin does not exist" });
 
-        const isPasswordCorrect = await compare(password, existingAdmin[0].Password);
+        // const isPasswordCorrect = await compare(password, existingAdmin[0].Password);
+        const isPasswordCorrect = password === existingAdmin[0].Password;
         if (!isPasswordCorrect)
             return res.status(403).send("Incorrect password...");
 
+        if (!existingAdmin[0].isAdmin)
+            return res.status(403).send("Not an Admin...")
         // Remove any existing cookies
         res.clearCookie(COOKIE_NAME, {
             httpOnly: true,
@@ -45,7 +48,8 @@ export const adminLogin = async (
         });
 
         // Create a token for the admin and store cookie
-        const token = createToken(existingAdmin[0].Admin_id, existingAdmin[0].Email, "7d");
+        // console.log(existingAdmin[0]);
+        const token = createToken(existingAdmin[0].Teacher_id, existingAdmin[0].Email, "7d");
         const expires = new Date();
         expires.setDate(expires.getDate() + 7);
 
@@ -75,10 +79,10 @@ export const verifyAdmin = async (
         if (!admin[0])
             return res.status(401).send("Admin not registered or Token malfunction...");
 
-
-        if (admin[0].Admin_id !== res.locals.jwtData.id)
+        if (admin[0].Teacher_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
 
+        console.log("Verified Admin");
         return res.status(200).json({ message: "OK", name: admin[0].Admin_Name, email: admin[0].Email });
     } catch (error) {
         console.log(error);
@@ -97,7 +101,7 @@ export const adminLogout = async (
         if (!admin[0])
             return res.status(401).send("Admin not registered or Token malfunction...");
 
-        if (admin[0].admin_id !== res.locals.jwtData.id)
+        if (admin[0].Admin_id !== res.locals.jwtData.id)
             return res.status(401).send("Permissions did not match...");
 
         res.clearCookie(COOKIE_NAME, {
@@ -107,7 +111,7 @@ export const adminLogout = async (
             path: "/"
         });
 
-        return res.status(200).json({ message: "OK", name: admin[0].admin_Name, email: admin[0].Email });
+        return res.status(200).json({ message: "OK", name: admin[0].Admin_Name, email: admin[0].Email });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message })

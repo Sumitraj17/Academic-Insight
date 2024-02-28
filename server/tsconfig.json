@@ -4,11 +4,15 @@
         "moduleResolution": "NodeNext",
         "target": "ES2022",
         "sourceMap": true,
-        "outDir": "dist",
+        "outDir": "./dist",
+        "rootDir": "./src",
         "allowSyntheticDefaultImports": true
     },
     "include": [
         "src/**/*.ts",
         "src/index.ts"
+    ],
+    "exclude": [
+        "node_modules"
     ]
 }

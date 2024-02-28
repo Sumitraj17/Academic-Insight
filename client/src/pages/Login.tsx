@@ -9,11 +9,11 @@ import { useEffect, useState } from "react";
 const Login = () => {
     const auth = useAuth();
     const navigate = useNavigate();
-    const [type, setType] = useState<"Admin" | "Teacher" | "Student">("Admin")
+    const [type, setType] = useState<"admin" | "teacher" | "student">("admin")
 
     const handleChange = (event: SelectChangeEvent) => {
         event.preventDefault();
-        setType(event.target.value as "Admin" | "Teacher" | "Student");
+        setType(event.target.value as "admin" | "teacher" | "student");
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -24,7 +24,7 @@ const Login = () => {
 
         try {
             toast.loading("Logging In", { id: "login" });
-            await auth?.login(email, password); // add user after changing db
+            await auth?.login(type,email, password); // add user after changing db
             toast.success("Logged In Successfully!", { id: "login" });
         } catch (error) {
             toast.error("Login In Failed", { id: "login" });
@@ -33,7 +33,7 @@ const Login = () => {
 
     useEffect(() => {
         if (auth?.user)
-            return navigate("/marks");
+            return navigate("/view-marks");
     }, [auth]);
 
     return (
@@ -99,9 +99,9 @@ const Login = () => {
                                     color: "black"
                                 }}
                             >
-                                <MenuItem value='Admin'>Admin</MenuItem>
-                                <MenuItem value='Teacher'>Teacher</MenuItem>
-                                <MenuItem value='Student'>Student</MenuItem>
+                                <MenuItem value='admin'>Admin</MenuItem>
+                                <MenuItem value='teacher'>Teacher</MenuItem>
+                                <MenuItem value='student'>Student</MenuItem>
                             </Select>
                             <CustomInput name="email" label="Email" type="email" />
                             <CustomInput name="password" label="Password" type="password" />
