@@ -5,26 +5,42 @@ import {
     Divider,
     ListItem,
     ListItemButton,
-    ListItemIcon,
     ListItemText,
     Typography,
     IconButton,
 
 } from "@mui/material";
+
 import '../index.css'
 
 import MenuIcon from '@mui/icons-material/Menu';
-import InboxIcon from "@mui/icons-material/MoveToInbox"
-import MailIcon from "@mui/icons-material/Mail";
 
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import WideLogo from "./shared/WideLogo";
+import { getClasses } from "../helpers/api-communicator";
+import { Classes } from "../interfaces/Classes";
 
-const SideBar = () => {
+interface SideBarProps {
+    onSelectClass: (selectedClass: Classes) => void;
+}
+
+const SideBar = ({ onSelectClass }: SideBarProps) => {
     const [open, setOpen] = useState(false);
+
+    const { isPending, error, data } = useQuery({
+        queryKey: ['classes'],
+        queryFn: () => getClasses(),
+        enabled: open
+    });
 
     const toggleDrawer = (newOpen: boolean) => {
         setOpen(newOpen);
+    }
+
+    const handleClassSelection = (_class: Classes) => {
+        onSelectClass(_class);
+        toggleDrawer(false);
     }
 
     const DrawerList = (
@@ -34,22 +50,29 @@ const SideBar = () => {
                 textAlign: 'center',
                 mt: '3rem'
             }} variant="h5">
-                Choose you class
+                Choose your class
             </Typography>
+            {isPending && <div>Loading...</div>}
+            {error && <div>Error: {error.message}</div>}
             <List>
-                {['Inbox', 'Starred', 'Send Mail', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
+                {data?.map((_class: Classes) => (
+                    <ListItem key={_class.course_id} disablePadding>
+                        <ListItemButton
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-around"
+                            }}
+                            onClick={() => handleClassSelection(_class)}
+                        >
+                            <ListItemText primary={_class.course_id} />
+                            <ListItemText primary={_class.course_name} />
+                            <ListItemText primary={_class.semsec} />
                         </ListItemButton>
                     </ListItem>
                 ))}
             </List>
             <Divider />
-        </Box>
+        </Box >
     )
 
     return (
@@ -60,6 +83,7 @@ const SideBar = () => {
                     position: "absolute",
                     top: '20%',
                     left: '10%',
+                    // opacity: 0
                 }}
             >
                 <MenuIcon

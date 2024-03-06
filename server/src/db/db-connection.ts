@@ -7,6 +7,8 @@ export const connection = mysql.createConnection({
     database: process.env.DB_NAME,
 });
 
+export const db = connection.promise();
+
 export const connectToDatabase = () => {
     connection.connect((err) => {
         if (err) {
