@@ -10,9 +10,9 @@ type User = {
 type UserAuth = {
     isLoggedIn: boolean;
     user: User | null;
-    login: (type: string,email: string, password: string) => Promise<void>;
-    logout: () => Promise<void>;
-    type : string|"admin";
+    login: (type: string, email: string, password: string) => Promise<void>;
+    logout: (type: string) => Promise<void>;
+    type: string | "admin";
 }
 
 const AuthContext = createContext<UserAuth | null>(null);
@@ -20,8 +20,8 @@ const AuthContext = createContext<UserAuth | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [type,setType] = useState(()=>{
-         // Retrieve the user type from localStorage on component mount
+    const [type, setType] = useState(() => {
+        // Retrieve the user type from localStorage on component mount
         const storedType = localStorage.getItem('userType');
         return storedType || 'admin'; // Default to 'admin' if not found
     });
@@ -30,26 +30,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         async function checkStatus() {
             const data = await checkAuthStatus(type); // add user after changing db
             if (data) {
-                setUser({ email: data.email, name: data.name });
+                setUser({ name: data.name, email: data.email, });
                 setIsLoggedIn(true);
+                setType(type);
             }
         }
         checkStatus()
     }, []);
 
-    const login = async (type:string, email: string, password: string) => {
-        const data = await userLogin(type,email, password);
+    const login = async (type: string, email: string, password: string) => {
+        const data = await userLogin(type, email, password);
 
         if (data) {
-            setUser({ email: data.email, name: data.name }); // add user after changing db
+            setUser({ name: data.name, email: data.email, }); // add user after changing db
             setIsLoggedIn(true);
             setType(type);
-            localStorage.setItem('userType',type);
+            localStorage.setItem('userType', type);
         }
     }
 
-    const logout = async () => {
-        const data = await userLogout();
+    const logout = async (type: string) => {
+        const data = await userLogout(type);
         if (data) {
             setUser(null);
             setIsLoggedIn(false);

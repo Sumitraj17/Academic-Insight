@@ -14,12 +14,12 @@ axios.defaults.baseURL = "http://localhost:5000/api/v1";
 axios.defaults.withCredentials = true;
 
 //theme for the whole website
-const theme = createTheme({
-    typography: {
-        fontFamily: "Roboto Slab, serif",
-        allVariants: { color: "#000" }
-    }
-})
+// const theme = createTheme({
+//     typography: {
+//         fontFamily: "Roboto Slab, serif",
+//         allVariants: { color: "#000" }
+//     }
+// })
 
 const queryClient = new QueryClient();
 
@@ -28,10 +28,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
                 <BrowserRouter>
-                    <ThemeProvider theme={theme}>
-                        <Toaster position='top-right' />
-                        <App />
-                    </ThemeProvider>
+                    {/* <ThemeProvider theme={theme}> */}
+                    <Toaster position='top-right' />
+                    <App />
+                    {/* </ThemeProvider> */}
                 </BrowserRouter>
             </AuthProvider>
         </QueryClientProvider>

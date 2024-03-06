@@ -14,6 +14,13 @@ const Login = () => {
     const handleChange = (event: SelectChangeEvent) => {
         event.preventDefault();
         setType(event.target.value as "admin" | "teacher" | "student");
+        const email = document.getElementById("email") as HTMLInputElement | null;
+        const password = document.getElementById("password") as HTMLInputElement | null;
+
+        if (email)
+            email.value = "";
+        if (password)
+            password.value = ""
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -24,7 +31,7 @@ const Login = () => {
 
         try {
             toast.loading("Logging In", { id: "login" });
-            await auth?.login(type,email, password); // add user after changing db
+            await auth?.login(type, email, password); // add user after changing db
             toast.success("Logged In Successfully!", { id: "login" });
         } catch (error) {
             toast.error("Login In Failed", { id: "login" });
@@ -85,7 +92,9 @@ const Login = () => {
                             fontWeight={600}
                         >
                             Login
-                            <InputLabel id='user-type'>Type</InputLabel>
+                            <InputLabel id='user-type' sx={{
+                                marginTop: '1.3rem'
+                            }}>Type</InputLabel>
                             <Select
                                 id="user-type-select"
                                 labelId="user-type"

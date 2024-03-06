@@ -1,13 +1,8 @@
 import axios from "axios";
-import { Student } from "../interfaces/Student";
+// import { Student } from "../interfaces/Student";
+import { AdminRecords, StudentRecords } from "../interfaces/Records";
 
-// type User = {
-//     name: string;
-//     email: string;
-//     type: "ADMIN" | "TEACHER" | "STUDENT";
-// }
-
-export const checkAuthStatus = async (type:string) => { //add user after changing db
+export const checkAuthStatus = async (type: string) => { //add user after changing db
     const res = await axios.get(`${type}/auth-status`);
 
     if (res.status !== 200)
@@ -17,7 +12,7 @@ export const checkAuthStatus = async (type:string) => { //add user after changin
     return data;
 }
 
-export const userLogin = async (type: string ,email: string, password: string) => { //add user after changing db
+export const userLogin = async (type: string, email: string, password: string) => { //add user after changing db
     const res = await axios.post(`${type}/login`, { email, password });
 
     if (res.status !== 201)
@@ -27,8 +22,8 @@ export const userLogin = async (type: string ,email: string, password: string) =
     return data;
 }
 
-export const userLogout = async () => {
-    const res = await axios.get('teacher/logout');
+export const userLogout = async (type: string) => {
+    const res = await axios.get(`${type}/logout`);
 
     if (res.status !== 200)
         throw new Error("Unable to logout");
@@ -37,8 +32,8 @@ export const userLogout = async () => {
     return data;
 }
 
-export const fileUploadTeacher = async (formData: FormData) => {
-    const res = await axios.post('/teacher/upload-file', formData);
+export const fileUpload = async (formData: FormData, type: string | undefined) => {
+    const res = await axios.post(`${type}/file-upload`, formData);
 
     if (res.status !== 201)
         throw new Error("Unable to send file");
@@ -47,8 +42,14 @@ export const fileUploadTeacher = async (formData: FormData) => {
     return data;
 }
 
-export const fetchData = async () => {
-    const res = await axios.get<{ students: Student[] }>("/teacher/get-marks");
-    const data = res.data.students;
+export const fetchData = async (type: string | undefined) => {
+    let res = null;
+    if (type === 'admin')
+        res = await axios.get<{ records: AdminRecords[] }>(`admin/get-all-records`);
+
+    if (type === 'teacher')
+        res = await axios.get<{ records: StudentRecords[] }>(`teacher/get-class-records`);
+
+    const data = res?.data.records;
     return data;
 }
