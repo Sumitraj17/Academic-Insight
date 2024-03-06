@@ -4,7 +4,6 @@ import { checkAuthStatus, userLogin, userLogout } from "../helpers/api-communica
 type User = {
     name: string;
     email: string;
-    // type: "admin" | "teacher" | "student";
 }
 
 type UserAuth = {
@@ -21,14 +20,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [type, setType] = useState(() => {
-        // Retrieve the user type from localStorage on component mount
+
         const storedType = localStorage.getItem('userType');
-        return storedType || 'admin'; // Default to 'admin' if not found
+        return storedType || 'admin';
     });
 
     useEffect(() => {
         async function checkStatus() {
-            const data = await checkAuthStatus(type); // add user after changing db
+            const data = await checkAuthStatus(type);
             if (data) {
                 setUser({ name: data.name, email: data.email, });
                 setIsLoggedIn(true);
@@ -42,7 +41,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const data = await userLogin(type, email, password);
 
         if (data) {
-            setUser({ name: data.name, email: data.email, }); // add user after changing db
+            console.log(data.data);
+            setUser({ name: data.name, email: data.email, });
             setIsLoggedIn(true);
             setType(type);
             localStorage.setItem('userType', type);
