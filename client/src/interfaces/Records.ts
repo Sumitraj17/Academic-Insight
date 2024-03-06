@@ -16,7 +16,7 @@ export interface StudentRecords {
 }
 
 export interface AdminRecords {
-    USN: string;
+    usn: string;
     Sub_Code: string;
     Subject: string;
     Class: string;

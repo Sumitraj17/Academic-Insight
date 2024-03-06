@@ -45,7 +45,7 @@ export const fileUpload = async (formData: FormData, type: string | undefined) =
 export const fetchData = async (type: string | undefined) => {
     let res = null;
     if (type === 'admin')
-        res = await axios.get<{ records: AdminRecords[] }>(`admin/get-all-records`);
+        res = await axios.get<{ records: AdminRecords[] }>(`admin/get-all-records/`);
 
     if (type === 'teacher')
         res = await axios.get<{ records: StudentRecords[] }>(`teacher/get-class-records`);

@@ -34,3 +34,7 @@ body {
 .MuiOutlinedInput-notchedOutline {
     border-color: black !important;
 }
+
+.MuiIcon-root {
+    color: 'blue'
+}

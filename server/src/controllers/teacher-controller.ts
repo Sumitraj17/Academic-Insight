@@ -135,16 +135,34 @@ export const handleFileUpload = async (
     }
 }
 
-export const getRecords = async (
+export const getClassRecords = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     try {
-        const [records] = await connection.promise().query(`CALL DisplayStudentRecordsForTeacher(2, '5A', 'CS101')`);
+        const { teacher_id, sem_sec, course_id } = req.query;
+        console.log(teacher_id, sem_sec, course_id);
+
+        const [records] = await connection.promise().query(`CALL DisplayStudentRecordsForTeacher(?, ?, ?)`, [teacher_id, sem_sec, course_id]);
         return res.status(200).json({ message: "OK", records: records[0] });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Error fetching marks", error: error.message });
+    }
+}
+
+export const getIndividualRecord = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { usn } = req.params;
+        const [record] = await connection.promise().query("SELECT * FROM record WHERE usn = ?", [usn]);
+        return res.status(200).json({ message: "OK", records: record[0] });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Errr=or fetching individual record", error: error.message });
     }
 }
