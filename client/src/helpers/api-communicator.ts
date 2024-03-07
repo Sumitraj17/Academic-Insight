@@ -1,10 +1,10 @@
 import axios from "axios";
-// import { Student } from "../interfaces/Student";
 import { AdminRecords, StudentRecords } from "../interfaces/Records";
+import { Classes } from "../interfaces/Classes";
 
 export const checkAuthStatus = async (type: string) => {
-  //add user after changing db
-  const res = await axios.get(`${type}/auth-status`);
+
+    const res = await axios.get(`${type}/auth-status`);
 
   if (res.status !== 200)
     throw new Error("[AUTHENTICATION_ERROR] Unable to authenticate user...");
@@ -13,13 +13,10 @@ export const checkAuthStatus = async (type: string) => {
   return data;
 };
 
-export const userLogin = async (
-  type: string,
-  email: string,
-  password: string
-) => {
-  //add user after changing db
-  const res = await axios.post(`${type}/login`, { email, password });
+
+export const userLogin = async (type: string, email: string, password: string) => {
+    const res = await axios.post(`${type}/login`, { email, password });
+
 
   if (res.status !== 201) throw new Error("Unable to login...");
 
@@ -50,18 +47,35 @@ export const fileUpload = async (
   return data;
 };
 
-export const fetchData = async (type: string | undefined) => {
-  let res = null;
-  if (type === "admin")
-    res = await axios.get<{ records: AdminRecords[] }>(
-      `admin/get-all-records/`
-    );
 
-  if (type === "teacher")
-    res = await axios.get<{ records: StudentRecords[] }>(
-      `teacher/get-class-records`
-    );
 
-  const data = res?.data.records;
-  return data;
-};
+export const getClassMarks = async (_class: Classes | undefined) => {
+    const res = await axios.get<{ records: StudentRecords[] }>(`/teacher/get-class-records?course_id=${_class?.course_id}&sem_sec=${_class?.semsec}`);
+
+    if (res.status !== 200)
+        throw new Error("Unable get marks");
+
+    const data = res?.data.records;
+    return data;
+}
+
+export const getAllMarksForAdmin = async (selectedClass: Classes | undefined) => {
+    const url = selectedClass
+        ? `teacher/get-class-records?course_id=${selectedClass.course_id}&sem_sec=${selectedClass.semsec}`
+        : 'admin/get-all-records/';
+
+    const res = await axios.get<{ records: AdminRecords[] }>(url);
+
+    if (res.status !== 200)
+        throw new Error("Unable get marks");
+
+    const data = res?.data.records
+    return data;
+}
+
+export const getClasses = async () => {
+    const res = await axios.get<{ classes: Classes[] }>("/teacher/get-classes");
+
+    const data = res?.data;
+    return data.classes;
+}

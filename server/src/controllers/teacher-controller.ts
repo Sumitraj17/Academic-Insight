@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { connection } from "../db/db-connection.js";
+import { connection, db } from "../db/db-connection.js";
 import { compare } from "bcrypt";
 import { COOKIE_NAME } from "../utils/constants.js";
 import { createToken } from "../utils/token-manager.js";
@@ -60,7 +60,7 @@ export const teacherLogin = async (
             signed: true
         });
 
-        return res.status(201).json({ message: "OK", name: existingTeacher[0].teacher_name, email: existingTeacher[0].email });
+        return res.status(201).json({ message: "OK", data: { name: existingTeacher[0].teacher_name, email: existingTeacher[0].email } });
     } catch (error) {
         console.log(error);
         return res.status(200).json({ message: "ERROR", cause: error.message });
@@ -141,10 +141,10 @@ export const getClassRecords = async (
     next: NextFunction
 ) => {
     try {
-        const { teacher_id, sem_sec, course_id } = req.query;
-        console.log(teacher_id, sem_sec, course_id);
+        const { sem_sec, course_id } = req.query;
+        console.log(sem_sec, course_id);
 
-        const [records] = await connection.promise().query(`CALL DisplayStudentRecordsForTeacher(?, ?, ?)`, [teacher_id, sem_sec, course_id]);
+        const [records] = await connection.promise().query(`CALL DisplayStudentRecordsForTeacher(?, ?, ?)`, [res.locals.jwtData.id, sem_sec, course_id]);
         return res.status(200).json({ message: "OK", records: records[0] });
     } catch (error) {
         console.log(error);
@@ -163,6 +163,21 @@ export const getIndividualRecord = async (
         return res.status(200).json({ message: "OK", records: record[0] });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: "Errr=or fetching individual record", error: error.message });
+        return res.status(500).json({ message: "Error fetching individual record", error: error.message });
     }
+}
+
+export const getClasses = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const [classes] = await connection.promise().query("CALL GetClass(?)", [res.locals.jwtData.id]);
+        return res.status(200).json({ message: "OK", classes: classes[0] });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Error", error: error.message });
+    }
+
 }
