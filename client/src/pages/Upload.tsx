@@ -41,9 +41,9 @@ const Upload = () => {
             }
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('type', fileType);
+            formData.append('filetype', fileType);
 
-            await fileUpload(formData, auth?.type);
+            await fileUpload(formData,fileType ,auth?.type);
 
             toast.success('File upload success', { id: 'upload-file' })
             setFile(null);
