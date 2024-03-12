@@ -9,7 +9,6 @@ import SideBar from '../components/SideBar';
 import { useState } from 'react';
 import { Classes } from '../interfaces/Classes';
 import { AdminRecords, StudentRecords } from '../interfaces/Records';
-import { CustomAvatar } from "../components/shared/CustomAvatar"
 
 const adminColumns: readonly AdminColumn[] = [
     { id: "USN", label: "USN", minWidth: 100, align: "center" },
@@ -70,7 +69,6 @@ const Marks = () => {
 
     return (
         <>
-            {/* <CustomAvatar /> */}
             <SideBar onSelectClass={handleClassChange} />
             <Typography variant="h4" gutterBottom component="div">
                 User: {auth?.type === 'teacher' ? auth?.user?.name : 'Admin'} <br />

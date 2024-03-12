@@ -142,9 +142,8 @@ export const getClassRecords = async (
 ) => {
     try {
         const { sem_sec, course_id } = req.query;
-        console.log(sem_sec, course_id);
-
         const [records] = await connection.promise().query(`CALL DisplayStudentRecordsForTeacher(?, ?, ?)`, [res.locals.jwtData.id, sem_sec, course_id]);
+
         return res.status(200).json({ message: "OK", records: records[0] });
     } catch (error) {
         console.log(error);
@@ -179,5 +178,4 @@ export const getClasses = async (
         console.log(error);
         return res.status(500).json({ message: "Error", error: error.message });
     }
-
 }
