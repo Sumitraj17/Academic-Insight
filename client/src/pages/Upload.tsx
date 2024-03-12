@@ -18,7 +18,7 @@ import { useAuth } from "../context/auth-context";
 const Upload = () => {
     const [file, setFile] = useState<File | null>(null);
     const [fileName, setFileName] = useState<string>('');
-    const [fileType, setFileType] = useState<"teacher" | "student" | "course" | "marks">('teacher');
+    const [fileType, setFileType] = useState<"teacher" | "student" | "course" | "marks" | "teachercourse" | "semsec">('teacher');
     const auth = useAuth();
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -27,8 +27,8 @@ const Upload = () => {
         setFileName(selectedFile?.name || '');
     }
 
-    const handleTypeChange = (event: SelectChangeEvent<"teacher" | "student" | "course" | "marks">) => {
-        setFileType(event.target.value as "teacher" | "student" | "course" | "marks");
+    const handleTypeChange = (event: SelectChangeEvent<"teacher" | "student" | "course" | "marks" | "teachercourse" | "semsec">) => {
+        setFileType(event.target.value as "teacher" | "student" | "course" | "marks" | "teachercourse" | "semsec");
     }
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -41,7 +41,7 @@ const Upload = () => {
             }
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('type', fileType);
+            formData.append('filetype', fileType);
 
             await fileUpload(formData, auth?.type);
 
@@ -89,6 +89,8 @@ const Upload = () => {
                                 <MenuItem value="teacher">Teacher Data</MenuItem>
                                 <MenuItem value="student">Student Data</MenuItem>
                                 <MenuItem value="course">Course Data</MenuItem>
+                                <MenuItem value="semsec">Semester and section</MenuItem>
+                                <MenuItem value="teachercourse">Course allocation</MenuItem>
                                 <MenuItem value="marks">Marks Data</MenuItem>
                             </Select>
                         )}
