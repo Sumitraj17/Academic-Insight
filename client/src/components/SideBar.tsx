@@ -20,6 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 import WideLogo from "./shared/WideLogo";
 import { getClasses } from "../helpers/api-communicator";
 import { Classes } from "../interfaces/Classes";
+// import { useAuth } from "../context/auth-context";
 
 interface SideBarProps {
     onSelectClass: (selectedClass: Classes) => void;
@@ -27,6 +28,8 @@ interface SideBarProps {
 
 const SideBar = ({ onSelectClass }: SideBarProps) => {
     const [open, setOpen] = useState(false);
+    const [chosenClass, setChosenClass] = useState<Classes | null>();
+    // const auth = useAuth();
 
     const { isPending, error, data } = useQuery({
         queryKey: ['classes'],
@@ -40,6 +43,7 @@ const SideBar = ({ onSelectClass }: SideBarProps) => {
 
     const handleClassSelection = (_class: Classes) => {
         onSelectClass(_class);
+        setChosenClass(_class);
         toggleDrawer(false);
     }
 
@@ -55,12 +59,25 @@ const SideBar = ({ onSelectClass }: SideBarProps) => {
             {isPending && <div>Loading...</div>}
             {error && <div>Error: {error.message}</div>}
             <List>
+                {/* {auth?.type === 'admin' && (
+                    <ListItem>
+                        <ListItemButton sx={{
+                            display: "flex",
+                            justifyContent: "space-around"
+                        }}
+
+                        >
+                            All classes
+                        </ListItemButton>
+                    </ListItem>
+                )} */}
                 {data?.map((_class: Classes) => (
-                    <ListItem key={_class.course_id} disablePadding>
+                    <ListItem key={_class.course_id} disablePadding selected={chosenClass?.course_id === _class.course_id}>
                         <ListItemButton
                             sx={{
                                 display: "flex",
-                                justifyContent: "space-around"
+                                justifyContent: "space-around",
+                                backgroundColor: chosenClass?.course_id === _class.course_id ? 'rgba(0, 0, 0, 0.1)' : 'transparent'
                             }}
                             onClick={() => handleClassSelection(_class)}
                         >

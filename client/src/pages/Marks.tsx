@@ -18,7 +18,7 @@ const adminColumns: readonly AdminColumn[] = [
     { id: "IA1", label: "IA-1", minWidth: 100, align: "center" },
     { id: "IA2", label: "IA-2", minWidth: 100, align: "center" },
     { id: "IA3", label: "IA-3", minWidth: 100, align: "center" },
-    { id: "Final_Ia", label: "Average IA", minWidth: 100, align: "center" },
+    { id: "Final_Marks", label: "Final IA", minWidth: 100, align: "center" },
     { id: "Attendance", label: "Attendance", minWidth: 100, align: "center" },
 ];
 

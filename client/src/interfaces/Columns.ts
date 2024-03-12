@@ -7,7 +7,7 @@ export interface TeacherColumn {
 }
 
 export interface AdminColumn {
-    id: "USN" | "Sub_Code" | "Subject" | "Class" | "IA1" | "IA2" | "IA3" | "Final_Ia" | "Attendance";
+    id: "USN" | "Sub_Code" | "Subject" | "Class" | "IA1" | "IA2" | "IA3" | "Final_Marks" | "Attendance";
     label: string;
     minWidth?: number;
     align?: "center";
