@@ -73,6 +73,7 @@ CREATE VIEW Teacher_display AS (
 CREATE VIEW Admin_display AS (
 	select usn as USN,course_id as Sub_Code,course_name as Subject,semsec as Class,Ia1_score as IA1,Ia2_score as IA2,Ia3_score as IA3,Final_Marks,Attendance_percentage as Attendance
 	from record r natural join course c
+	order by usn
 );
 
 DELIMITER //
@@ -97,6 +98,7 @@ BEGIN
     FROM teacher_course tc
     JOIN course c ON tc.course_id = c.course_id
     WHERE tc.teacher_id = id;
+	order by tc.semsec;
 END//
 DELIMITER ;
 

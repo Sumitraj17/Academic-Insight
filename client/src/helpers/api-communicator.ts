@@ -3,7 +3,6 @@ import { AdminRecords, StudentRecords } from "../interfaces/Records";
 import { Classes } from "../interfaces/Classes";
 
 export const checkAuthStatus = async (type: string) => {
-
     const res = await axios.get(`${type}/auth-status`);
 
     if (res.status !== 200)
