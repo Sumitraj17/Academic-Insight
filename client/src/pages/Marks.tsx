@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { Typography } from "@mui/material";
 import { getClassMarks, getAllMarksForAdmin } from '../helpers/api-communicator';
 import { useAuth } from '../context/auth-context';
 import { AdminColumn, TeacherColumn } from '../interfaces/Columns';
@@ -70,10 +69,6 @@ const Marks = () => {
     return (
         <>
             <SideBar onSelectClass={handleClassChange} />
-            <Typography variant="h4" gutterBottom component="div">
-                User: {auth?.type === 'teacher' ? auth?.user?.name : 'Admin'} <br />
-                Student Details
-            </Typography>
             {isPending && (auth?.type === 'admin' ? (
                 <SkeletonLoader columns={adminColumns} />
             ) :

@@ -59,18 +59,6 @@ const SideBar = ({ onSelectClass }: SideBarProps) => {
             {isPending && <div>Loading...</div>}
             {error && <div>Error: {error.message}</div>}
             <List>
-                {/* {auth?.type === 'admin' && (
-                    <ListItem>
-                        <ListItemButton sx={{
-                            display: "flex",
-                            justifyContent: "space-around"
-                        }}
-
-                        >
-                            All classes
-                        </ListItemButton>
-                    </ListItem>
-                )} */}
                 {data?.map((_class: Classes) => (
                     <ListItem key={_class.course_id} disablePadding selected={chosenClass?.course_id === _class.course_id}>
                         <ListItemButton
@@ -98,9 +86,8 @@ const SideBar = ({ onSelectClass }: SideBarProps) => {
                 onClick={() => toggleDrawer(true)}
                 sx={{
                     position: "absolute",
-                    top: '20%',
+                    top: '21.5%',
                     left: '10%',
-                    // opacity: 0
                 }}
             >
                 <MenuIcon
